@@ -4,7 +4,6 @@ import plotly.express as px
 import requests
 import os
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 import random
 import google.generativeai as genai
 
@@ -207,7 +206,7 @@ class InsightGenerator:
     def generate_insights(self, data_summary):
         """Generate insights using Google Gemini"""
         if not self.model:
-            return "Gemini API key not configured. Please add GEMINI_API_KEY to your .env file."
+            return "Gemini API key not configured. Please add GEMINI_API_KEY to your secrets."
         
         try:
             prompt = f"""
@@ -282,13 +281,11 @@ def main():
 
     # API key checks
     if not AVIATIONSTACK_API_KEY:
-        st.error("⚠️ AviationStack API key not found. Please add it to your .env file.")
-        st.code("AVIATIONSTACK_API_KEY=your_api_key_here")
-        return
+        st.error("⚠️ AviationStack API key not found. Please add it to your secrets.")
+        st.stop()
     
     if show_insights and not GEMINI_API_KEY:
         st.warning("⚠️ Gemini API key not found. AI insights will be disabled.")
-        st.code("GEMINI_API_KEY=your_gemini_api_key_here")
 
     # Main data fetching and analysis - Always use Australia-focused data
     with st.spinner("Fetching Australian flight data..."):
@@ -427,11 +424,11 @@ def main():
 
             # AI-Generated Insights
             if show_insights:
-                st.header("🤖 AI-Generated Business Insights")
+                st.header("🤖 AI-Generated Business Insights (Powered by Gemini)")
                 
                 if st.button("🔮 Generate Strategic Insights", type="primary"):
                     if not GEMINI_API_KEY:
-                        st.warning("Gemini API key not configured. Please add GEMINI_API_KEY to your .env file.")
+                        st.warning("Gemini API key not configured. Please add GEMINI_API_KEY to your secrets.")
                     else:
                         with st.spinner("Analyzing data with Google Gemini AI..."):
                             data_summary = f"""
