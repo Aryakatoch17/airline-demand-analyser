@@ -8,12 +8,15 @@ from dotenv import load_dotenv
 import random
 import google.generativeai as genai
 
-# Load environment variables
-load_dotenv()
-
-# API keys
-AVIATIONSTACK_API_KEY = os.getenv('AVIATIONSTACK_API_KEY')
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+# Handle secrets for Streamlit Cloud deployment
+try:
+    # Try to load from Streamlit secrets first (for cloud deployment)
+    AVIATIONSTACK_API_KEY = st.secrets["AVIATIONSTACK_API_KEY"]
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+except:
+    # Fallback to environment variables (for local development)
+    AVIATIONSTACK_API_KEY = os.getenv('AVIATIONSTACK_API_KEY')
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Configure Gemini
 if GEMINI_API_KEY:
